@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body_block %}
+<main id="main">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-lg p-4 mb-5 bg-white rounded">
+                    <!-- Tiêu đề Form: Tự động điều chỉnh giữa "Cập Nhật" và "Tạo Mới" -->
+                    {% if post %}
+                    <!-- Nếu có đối tượng post (đang cập nhật) -->
+                    <h1 class="card-title text-center mb-4 text-primary">Cập Nhật Bài Viết: "{{ post.title }}"</h1>
+                    {% else %}
+                    <!-- Nếu không có đối tượng post (đang tạo mới) -->
+                    <h1 class="card-title text-center mb-4 text-success">Tạo Bài Viết Mới</h1>
+                    {% endif %}
+
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- Lặp qua TẤT CẢ các trường form (5 trường: title, image, content, author, published_date) -->
+                        {% for field in form %}
+                        <div class="mb-3">
+                            <!-- Hiển thị label (ví dụ: Ngày xuất bản) -->
+                            <label for="{{ field.id_for_label }}" class="form-label fw-bold">{{ field.label }}</label>
+
+                            <!-- Hiển thị trường input (sẽ là datetime-local, text input, textarea...) -->
+                            {{ field }}
+
+                            <!-- Hiển thị lỗi (nếu có) -->
+                            {% if field.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in field.errors %}
+                                {{ error }}
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
+                            <!-- Hiển thị help text (nếu có) -->
+                            {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 pt-3 border-top">
+                            <!-- Nút Submit: Tự động điều chỉnh -->
+                            <button type="submit" class="btn btn-success btn-lg px-5">
+                                {% if post %}Cập Nhật{% else %}Tạo Bài Viết{% endif %}
+                            </button>
+                            <!-- Nút Hủy: Quay lại trang danh sách bài viết -->
+                            <a href="{% url 'first_app:category' %}" class="btn btn-secondary btn-lg px-5">Hủy bỏ</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

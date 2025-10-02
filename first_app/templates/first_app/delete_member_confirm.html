@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block body_block %}
+
+<div class="container mt-5">
+    <h2>Xác Nhận Xóa</h2>
+    <p>Bạn có chắc chắn muốn xóa thành viên **{{ team.name }}**?</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a href="{% url 'first_app:about' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+{% endblock %}

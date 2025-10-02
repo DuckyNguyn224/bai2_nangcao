@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+<main class="main">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="title mb-4 text-danger">Xác Nhận Xóa Bình Luận</h2>
+                <div class="card p-4">
+                    <p>Bạn có chắc chắn muốn xóa bình luận này của **{{ comment.author }}** không?</p>
+                    <blockquote class="blockquote">
+                        <p class="mb-0">{{ comment.body }}</p>
+                    </blockquote>
+
+                    <form method="post" action="{% url 'first_app:delete_comment' pk=comment.pk %}">
+                        {% csrf_token %} <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <a href="{% url 'first_app:single-post' pk=comment.post.pk %}"
+                                class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

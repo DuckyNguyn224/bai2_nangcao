@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+<main class="main">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="title mb-4">Sửa Bình Luận</h2>
+                <div class="card p-4">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-success">Lưu Thay Đổi</button>
+                            <a href="{% url 'first_app:single-post' pk=comment.post.pk %}"
+                                class="btn btn-secondary">Hủy</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

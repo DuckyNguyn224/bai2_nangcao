@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+<main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title position-relative">
+        <div class="container d-lg-flex justify-content-between align-items-center">
+            <h1 class="mb-2 mb-lg-0">Category</h1>
+            <nav class="breadcrumbs">
+                <ol>
+                    <li><a href="index.html">Home</a></li>
+                    <li class="current">Categories</li>
+                </ol>
+            </nav>
+        </div>
+    </div><!-- End Page Title -->
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-lg-8">
+
+                <!-- Blog Posts Section -->
+                <section id="blog-posts" class="blog-posts section">
+
+                    <div class="container">
+                        <div class="row gy-4">
+
+                            {% for post in object_list %}
+                            <div class="col-lg-6">
+                                <article class="position-relative h-100">
+
+                                    <div class="post-img position-relative overflow-hidden">
+                                        {# Giả sử bạn có trường image/thumbnail trong Post model #}
+                                        {# THAY THẾ: Nên dùng post.image.url nếu có, hoặc dùng ảnh tĩnh #}
+                                        <img src="{{ post.image }}" class="img-fluid" alt="{{ post.title }}">
+                                        <span class="post-date">{{ post.published_date|date:"F d, Y" }}</span>
+                                    </div>
+
+                                    <div class="post-content d-flex flex-column">
+
+                                        <h3 class="post-title">{{ post.title }}</h3>
+
+                                        <div class="meta d-flex align-items-center">
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-person"></i> <span class="ps-2">{{ post.author }}</span>
+                                            </div>
+
+                                            <span class="px-3 text-black-50">/</span>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-folder2"></i> <span class="ps-2">General</span>
+                                            </div>
+                                        </div>
+
+                                        <p>
+                                            {# Hiển thị một đoạn ngắn nội dung #}
+                                            {{ post.content|truncatechars:150 }}
+                                        </p>
+
+                                        <hr>
+
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            {# Nút Đọc Thêm (Read More) #}
+                                            <a href="{% url 'first_app:single-post' pk=post.pk %}"
+                                                class="readmore stretched-link"><span>Read More</span><i
+                                                    class="bi bi-arrow-right"></i></a>
+
+                                            {# Các nút thao tác (Được đặt trong div riêng để kiểm soát z-index) #}
+                                            <div style="z-index: 1000; position: relative;">
+
+                                                {# Nút Sửa Bài Viết #}
+                                                <a href="{% url 'first_app:update_post' pk=post.pk %}"
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="bi bi-pencil"></i> Update
+                                                </a>
+
+                                                {# SỬA: Form POST để Xóa Bài Viết Trực Tiếp #}
+                                                <form method="POST"
+                                                    action="{% url 'first_app:delete_post' pk=post.pk %}"
+                                                    style="display:inline-block; margin-left: 8px;"
+                                                    onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết: {{ post.title }}?');">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="bi bi-trash"></i> Delete
+                                                    </button>
+                                                </form>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </article>
+                            </div><!-- End post list item -->
+                            {% empty %}
+                            <div class="col-12">
+                                <p class="text-center lead">Không có bài viết nào trong danh mục này.</p>
+                            </div>
+                            {% endfor %}
+                            {# Kết thúc vòng lặp #}
+
+                        </div>
+                    </div>
+
+                </section><!-- /Blog Posts Section -->
+
+                <!-- Blog Pagination Section -->
+                <section id="blog-pagination" class="blog-pagination section">
+
+                    <div class="container">
+                        <div class="d-flex justify-content-center">
+                            {# Giữ nguyên phần phân trang tĩnh #}
+                            <ul class="glightbox blog-pagination-list">
+                                <li><a href="#"><i class="bi bi-arrow-left"></i></a></li>
+                                <li><a href="#">1</a></li>
+                                <li><a href="#" class="active">2</a></li>
+                                <li><a href="#">3</a></li>
+                                <li><a href="#"><i class="bi bi-arrow-right"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </section><!-- /Blog Pagination Section -->
+
+            </div>
+
+            <div class="col-lg-4 sidebar">
+
+                <div class="widgets-container">
+                    <div class="d-grid gap-2 mb-4">
+                        <a href="{% url 'first_app:create_post' %}" class="btn btn-primary btn-lg">
+                            <i class="bi bi-plus-circle"></i> Tạo Bài Viết Mới
+                        </a>
+                    </div>
+                    <!-- Search Widget -->
+                    <div class="search-widget widget-item">
+
+                        <h3 class="widget-title">Search</h3>
+                        <form action="">
+                            <input type="text">
+                            <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                        </form>
+
+                    </div><!--/Search Widget -->
+
+                    <!-- Categories Widget -->
+                    <div class="categories-widget widget-item">
+
+                        <h3 class="widget-title">Categories</h3>
+                        <ul class="mt-3">
+                            <li><a href="#">Travel <span>(2)</span></a></li>
+                            <li><a href="#">Culture <span>(5)</span></a></li>
+                            <li><a href="#">Sport <span>(1)</span></a></li>
+                            <li><a href="#">Food <span>(8)</span></a></li>
+                            <li><a href="#">Politics <span>(17)</span></a></li>
+                            <li><a href="#">Business <span>(4)</span></a></li>
+                        </ul>
+
+                    </div><!--/Categories Widget -->
+
+                    <!-- Recent Posts Widget -->
+                    <div class="recent-posts-widget widget-item">
+
+                        <h3 class="widget-title">Recent Posts</h3>
+
+                        <div class="post-item">
+                            <img src="{% static 'img/blog/blog-recent-1.jpg' %}" alt="" class="flex-shrink-0">
+                            <div>
+                                <h4><a href="blog-details.html">Nihil blanditiis at in a dectis an</a></h4>
+                                <time datetime="2020-01-01">Jan 1, 2020</time>
+                            </div>
+                        </div><!-- End recent post item-->
+                        <div class="post-item">
+                            <img src="{% static 'img/blog/blog-recent-2.jpg' %}" alt="" class="flex-shrink-0">
+                            <div>
+                                <h4><a href="blog-details.html">Quidem harum non désérunt</a></h4>
+                                <time datetime="2020-01-01">Jan 1, 2020</time>
+                            </div>
+                        </div><!-- End recent post item-->
+                        <div class="post-item">
+                            <img src="{% static 'img/blog/blog-recent-3.jpg' %}" alt="" class="flex-shrink-0">
+                            <div>
+                                <h4><a href="blog-details.html">Id quia et et ut maxime similique occaecati ut</a></h4>
+                                <time datetime="2020-01-01">Jan 1, 2020</time>
+                            </div>
+                        </div><!-- End recent post item-->
+                        <div class="post-item">
+                            <img src="{% static 'img/blog/blog-recent-4.jpg' %}" alt="" class="flex-shrink-0">
+                            <div>
+                                <h4><a href="blog-details.html">Laborum corporis quos hill</a></h4>
+                                <time datetime="2020-01-01">Jan 1, 2020</time>
+                            </div>
+                        </div><!-- End recent post item-->
+                        <div class="post-item">
+                            <img src="{% static 'img/blog/blog-recent-5.jpg' %}" alt="" class="flex-shrink-0">
+                            <div>
+                                <h4><a href="blog-details.html">Et dolores corrupti quae illo quod dolor</a></h4>
+                                <time datetime="2020-01-01">Jan 1, 2020</time>
+                            </div>
+                        </div><!-- End recent post item-->
+
+                    </div><!--/Recent Posts Widget -->
+
+                    <!-- Tags Widget -->
+                    <div class="tags-widget widget-item">
+
+                        <h3 class="widget-title">Tags</h3>
+                        <ul>
+                            <li><a href="#">App</a></li>
+                            <li><a href="#">IT</a></li>
+                            <li><a href="#">Business</a></li>
+                            <li><a href="#">Mac</a></li>
+                            <li><a href="#">Design</a></li>
+                            <li><a href="#">Office</a></li>
+                            <li><a href="#">Creative</a></li>
+                            <li><a href="#">Studio</a></li>
+                            <li><a href="#">Smart</a></li>
+                            <li><a href="#">Tips</a></li>
+                            <li><a href="#">Marketing</a></li>
+                        </ul>
+
+                    </div><!--/Tags Widget -->
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</main>
+{% endblock %}

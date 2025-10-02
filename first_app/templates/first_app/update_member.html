@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block body_block %}
+
+<div class="container mt-5">
+    <h2>Chỉnh Sửa Thành Viên: {{ team.name }}</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{% url 'first_app:about' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+{% endblock %}

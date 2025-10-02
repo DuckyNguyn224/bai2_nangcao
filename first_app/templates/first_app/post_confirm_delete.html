@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block body_block %}
+
+<main class="main">
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card shadow-lg p-4">
+                    <div class="card-body">
+                        <h2 class="card-title text-danger text-center mb-4">Xác nhận Xóa Bài Viết</h2>
+
+                        <p class="text-center lead">Bạn có chắc chắn muốn xóa bài viết sau?</p>
+
+                        <div class="alert alert-warning text-center">
+                            <strong>{{ post.title }}</strong>
+                            <br>
+                            <small>Được đăng ngày: {{ post.published_date|date:"d/m/Y" }}</small>
+                        </div>
+
+                        {# Form xác nhận xóa #}
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                                <button type="submit" class="btn btn-danger btn-lg">Xác nhận XÓA</button>
+
+                                {# Quay lại trang chi tiết bài viết (Hủy bỏ) #}
+                                <a href="{% url 'first_app:single-post' pk=post.pk %}"
+                                    class="btn btn-secondary btn-lg">Hủy bỏ</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% endblock %}
